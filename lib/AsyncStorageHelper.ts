@@ -3,19 +3,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const cur_date =  () => new Date().toISOString().split("T")[0];
 
-// export const readTodays =  async (key) => {
-//   const cd = cur_date()
-//   console.log(cur_date)
-//   const score = await getData(cd + "_" + "score");
+export const isNumeric = (value) =>  /^-?\d+$/.test(value)
+  
 
-// }
+export const readTodays =  async (key, defval?) => {
+  const cd = cur_date()
+  console.log(cur_date)
+  const val = await getData(cd + "_" + key);
+  if(val){
+    const sval = val.split("_")[1];
+    if (isNumeric(val) )
+      return parseInt(val);
+    return val
+  }
+  return defval;
+}
 
-// export const writeTodays = async (key, val) =>{
-//   let value = await getData(cur_date());
-//   value = JSON.parse(value)
-//   value[key] =  val
-//   await storeData(cd , value);
-// }
+export const writeTodays = async (key, value) =>{
+  //let value = await getData(cur_date());
+
+  await storeData(cur_date() + "_" + key, value + "");
+ // await storeData(cd , value);
+}
 
 
 export const storeData = async (key:string, val:string) => {

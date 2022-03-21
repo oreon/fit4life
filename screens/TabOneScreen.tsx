@@ -23,27 +23,29 @@ import {
 import ActionCard from "../components/ActionCard";
 import { CARDS } from "../constants/Data";
 import { GlobalContext } from "../App";
-import { getData, storeData } from "../lib/AsyncStorageHelper";
+import { getData, readTodays, storeData } from "../lib/AsyncStorageHelper";
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
   //const score = useContext(GlobalContext);
 
-  useEffect(() => {
-    console.log("called");
-    return async () => {
-      const score = await getData(cur_date() + "_" + "score");
-      setScore(10);
-    };
-  }, []);
+  // const score = ;
+  // setScore(score);
+
+  // useEffect(() => {
+  //   console.log("called");
+  //   return async () => {
+
+  //   };
+  // }, []);
+
+  //const curscore = await readTodays("score", 2);
 
   const [score, setScore] = React.useState(0);
-  const cur_date = () => new Date().toISOString().split("T")[0];
 
   const updateScore = async () => {
     setScore(score + 1);
-    await storeData(cur_date() + "_" + "score", score + "");
   };
 
   return (
