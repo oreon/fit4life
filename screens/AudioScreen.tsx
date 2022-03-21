@@ -4,10 +4,11 @@ import { Platform, StyleSheet } from "react-native";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 
-export default function AudioScreen() {
+export default function AudioScreen({ route, navigation }) {
+  const { mfile } = route.params;
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>This can play any audio file !</Text>
+      <Text style={styles.title}>This can play any audio file ! {mfile}</Text>
       <View
         style={styles.separator}
         lightColor="#eee"

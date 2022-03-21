@@ -13,6 +13,7 @@ import { RootTabScreenProps } from "../types";
 import { ScrollView } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import ActionCard from "../components/ActionCard";
+import { CARDS } from "../constants/Data";
 
 export default function TabOneScreen({
   navigation,
@@ -43,6 +44,16 @@ export default function TabOneScreen({
 
   */}
       <Button onPress={() => navigation.navigate("Modal")}>Go to modal</Button>
+      {Object.keys(CARDS).map((k, i) => (
+        <ActionCard
+          navigation={navigation}
+          key={k}
+          title={k}
+          text={CARDS[k].text}
+          cardtype={CARDS[k].type}
+          mfile={CARDS[k].media}
+        />
+      ))}
       <ActionCard
         navigation={navigation}
         title="Meditation upon waking up"
