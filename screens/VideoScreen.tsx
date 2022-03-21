@@ -27,17 +27,19 @@ export default function VideoScreen({ route, navigation }) {
 }
 
 export function WorkoutYoutube({ mfile }) {
-  const [playing, setPlaying] = useState(false);
+  // const [playing, setPlaying] = useState(false);
 
-  const onStateChange = useCallback((state) => {
-    if (state === "ended") {
-      setPlaying(false);
-    }
-  }, []);
+  // const onStateChange = useCallback((state) => {
+  //   if (state === "ended") {
+  //     setPlaying(false);
+  //   }
+  // }, []);
 
-  const togglePlaying = useCallback(() => {
-    setPlaying((prev) => !prev);
-  }, []);
+  // const togglePlaying = useCallback(() => {
+  //   setPlaying((prev) => !prev);
+  // }, []);
+
+  //this should play videos
 
   // uri: `https://www.youtube.com/embed/${mfile}?&autoplay=0a&mute=1&showinfo=0&controls=1&fullscreen=1`,
   return (
