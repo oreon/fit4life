@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { GlobalContext } from "../App";
 
 const HamIcon = (props: any) => <Avatar.Icon {...props} icon="hamburger" />;
 
@@ -12,8 +13,10 @@ export default function ActionCard({
   text,
   cardtype,
   mfile,
+  updateScore,
 }) {
   const [done, setDone] = useState(false);
+  //const { score, setScore } = useContext(GlobalContext);
 
   const LeftContent = (props: any) =>
     // <Avatar.Icon {...props} icon="fruit-pineapple" />
@@ -50,7 +53,13 @@ export default function ActionCard({
       {/* <Card.Cover source={{ uri: "https://picsum.photos/700" }} /> */}
       <Card.Actions>
         <Card.Actions>
-          <Button onPress={() => setDone(true)} disabled={done}>
+          <Button
+            onPress={() => {
+              setDone(true);
+              updateScore();
+            }}
+            disabled={done}
+          >
             Done
           </Button>
         </Card.Actions>
