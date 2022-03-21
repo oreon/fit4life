@@ -28,24 +28,12 @@ export default function ActionCard({
     <Card>
       <Card.Title
         title={title}
-        left={LeftContent}
+        // left={LeftContent}
         style={{ backgroundColor: done ? "lightGray" : "#dedede" }}
       />
       <Card.Content style={{ backgroundColor: done ? "lightGray" : "#dedede" }}>
-        {/* <Title style={{ color: !done ? "" : "gray" }}>
-          {done ? (
-            <FontAwesome
-              name="info-circle"
-              size={25}
-              style={{ marginRight: 15 }}
-            />
-          ) : (
-            ""
-          )}
-        </Title> */}
-        <Paragraph style={{ color: !done ? "" : "gray" }}>
-          {text} {mfile}
-        </Paragraph>
+        <Title style={{ color: !done ? "green" : "gray" }}></Title>
+        <Paragraph style={{ color: !done ? "" : "gray" }}>{text}</Paragraph>
 
         {isav && (
           <Button

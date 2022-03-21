@@ -1,22 +1,66 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet } from "react-native";
+// import { WebView } from "react-native-webview";
+import React, { useState, useCallback } from "react";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
+import { WORKOUT_URLS } from "../constants/Data";
 
-export default function VideoScreen() {
+import { Video } from "expo-av";
+import VideoPlayer from "expo-video-player";
+
+export default function VideoScreen({ route, navigation }) {
+  //const { mfile } = route.params; //mfile is the media file
+
+  var time = new Date().getDate();
+  let playback_id = time % 2 != 0 ? WORKOUT_URLS.odd : WORKOUT_URLS.even;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Videos Only !</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+      <Text style={styles.title}>Playing {playback_id}</Text>
+      <WorkoutYoutube mfile={playback_id} />
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
+  );
+}
+
+export function WorkoutYoutube({ mfile }) {
+  const [playing, setPlaying] = useState(false);
+
+  const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+      setPlaying(false);
+    }
+  }, []);
+
+  const togglePlaying = useCallback(() => {
+    setPlaying((prev) => !prev);
+  }, []);
+
+  // uri: `https://www.youtube.com/embed/${mfile}?&autoplay=0a&mute=1&showinfo=0&controls=1&fullscreen=1`,
+  return (
+    <VideoPlayer
+      videoProps={{
+        shouldPlay: true,
+        resizeMode: Video.RESIZE_MODE_CONTAIN,
+        // ❗ source is required https://docs.expo.io/versions/latest/sdk/video/#props
+        source: {
+          uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        },
+      }}
+    />
+    //     <WebView
+    //       javaScriptEnabled={true}
+    //       scrollEnabled={false}
+    //       allowsFullscreenVideo={true}
+    //       userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36
+    //  (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+    //       source={{
+    //         uri: "https://www.breatherightyoga.com",
+    //       }}
+    //     />
   );
 }
 
