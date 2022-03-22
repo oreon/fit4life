@@ -8,7 +8,7 @@ export const isNumeric = (value) =>  /^-?\d+$/.test(value)
 
 export const readTodays =  async (key, defval?) => {
   const cd = cur_date()
-  console.log(cur_date)
+  
   const val = await getData(cd + "_" + key);
   if(val){
     const sval = val.split("_")[1];
@@ -20,8 +20,6 @@ export const readTodays =  async (key, defval?) => {
 }
 
 export const writeTodays = async (key, value) =>{
-  //let value = await getData(cur_date());
-
   await storeData(cur_date() + "_" + key, value + "");
  // await storeData(cd , value);
 }
@@ -32,7 +30,7 @@ export const storeData = async (key:string, val:string) => {
   try {
     console.log("sving ", key, val);
     await AsyncStorage.setItem(key, val)
-    console.log("sving ", key, val);
+   
     // let toast = Toast.show("Saved !", {
     //   duration: Toast.durations.SHORT,
     // });

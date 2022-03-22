@@ -8,27 +8,17 @@ import Navigation from "./navigation";
 
 import { useState } from "@hookstate/core";
 import store from "./lib/Store";
-import { readTodays } from "./lib/AsyncStorageHelper";
+import { readTodays, storeData } from "./lib/AsyncStorageHelper";
 
-// export const GlobalContext = React.createContext({
-//   score: 30,
-//   setScore: () => {},
-// });
+import * as Notifications from "expo-notifications";
 
-// const GlobalProvider = (props) => {
-//   const [score, setScore] = React.useState(40);
-//   const [user, setUser] = React.useState("Jonny");
-
-//   const increment = () => {
-//     setScore(score + 1);
-//   };
-
-//   return (
-//     <GlobalContext.Provider value={score}>
-//       {props.children}
-//     </GlobalContext.Provider>
-//   );
-// };
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -38,6 +28,13 @@ export default function App() {
 
   useEffect(() => {
     readData();
+
+    //just for testing
+    storeData("2022-03-21_score", "200");
+    storeData("2022-03-20_score", "100");
+    storeData("2022-03-19_score", "90");
+    storeData("2022-03-18_score", "0");
+    storeData("2022-03-16_score", "40");
   }, []);
 
   const readData = async () => {
