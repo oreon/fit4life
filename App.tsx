@@ -42,7 +42,8 @@ export default function App() {
 
   const readData = async () => {
     try {
-      const currscore = await readTodays("score", 0);
+      let currscore = await readTodays("score", 0);
+      if (isNaN(currscore)) currscore = 0;
       globalState.merge({
         score: currscore,
       });

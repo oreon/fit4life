@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
@@ -23,7 +23,11 @@ export default function ActionCard({
 
   const LeftContent = (props: any) =>
     // <Avatar.Icon {...props} icon="fruit-pineapple" />
-    done ? <Ionicons name="md-checkmark-circle" size={32} color="green" /> : "";
+    done ? (
+      <Ionicons name="md-checkmark-circle" size={32} color="green" />
+    ) : (
+      <Ionicons name="attach" size={32} color="gray" />
+    );
 
   const isav = cardtype === "audio" || cardtype === "video";
 
@@ -31,7 +35,7 @@ export default function ActionCard({
     <Card>
       <Card.Title
         title={title}
-        // left={LeftContent}
+        left={LeftContent}
         style={{ backgroundColor: done ? "lightGray" : "#dedede" }}
       />
       <Card.Content style={{ backgroundColor: done ? "lightGray" : "#dedede" }}>
