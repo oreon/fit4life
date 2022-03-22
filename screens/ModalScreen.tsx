@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -17,6 +17,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 
 import CustomSlider from "../components/CustomSlider";
 import Settings from "./Settings";
+import BezLineChart from "../components/BezLineChart";
 
 const Tab = createMaterialTopTabNavigator();
 const cur_date_str = new Date().toISOString().split("T")[0];
@@ -49,16 +50,39 @@ export function TrackerScreen() {
 }
 
 export function StatsScreen() {
+  //TODO - thsese should come from server or local sql lite
+  const scores = [
+    { key: "Jan 3 2022", val: 350 },
+    { key: "Jan 4 2022", val: 250 },
+    { key: "Jan 6 2022 ", val: 90 },
+    { key: "Jan 9 2022 ", val: 190 },
+  ];
+
+  const sleep = [
+    { key: "Jan 3 2022", val: 10 },
+    { key: "Jan 4 2022", val: 5 },
+    { key: "Jan 6 2022 ", val: 9 },
+    { key: "Jan 9 2022 ", val: 1 },
+  ];
+
+  const stress = [
+    { key: "Jan 3 2022", val: 1 },
+    { key: "Jan 4 2022", val: 8 },
+    { key: "Jan 6 2022 ", val: 9 },
+    { key: "Jan 9 2022 ", val: 4 },
+  ];
+
   return (
-    <View style={styles.container}>
-      <Headline>Track your day !</Headline>
+    <ScrollView>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <Text>Here are your stats !</Text>
-    </View>
+      <BezLineChart title="Scores" data={scores} />
+      <BezLineChart title="Sleep" data={sleep} />
+      <BezLineChart title="Stress" data={stress} />
+    </ScrollView>
   );
 }
 
