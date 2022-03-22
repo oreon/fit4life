@@ -3,6 +3,10 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 
+/*
+Currently not in use 
+*/
+
 const audioBookPlaylist = [
   {
     title: "Hamlet - Act I",

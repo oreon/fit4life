@@ -4,6 +4,7 @@
  *
  */
 import { FontAwesome } from "@expo/vector-icons";
+import { useState } from "@hookstate/core";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -16,12 +17,17 @@ import { ColorSchemeName, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
+import store from "../lib/Store";
+import Article from "../screens/Article";
 import AudioScreen from "../screens/AudioScreen";
+import Login from "../screens/Login";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import Posts from "../screens/Posts";
 import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
-import VideoScreen from "../screens/VideoScreen";
+import VideoScreen, { WorkoutYoutube } from "../screens/VideoScreen";
+import Workout from "../screens/Workout";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -51,7 +57,18 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  return (
+  const globalState = useState(store);
+  const user = store.get().user;
+
+  //const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    if (user) {
+      console.log("user is in " + user);
+    }
+  }, [user]);
+
+  return user ? (
     <Stack.Navigator>
       <Stack.Screen
         name="Root"
@@ -67,7 +84,16 @@ function RootNavigator() {
         <Stack.Screen name="Modal" component={ModalScreen} />
         <Stack.Screen name="audio" component={AudioScreen} />
         <Stack.Screen name="video" component={VideoScreen} />
+        <Stack.Screen name="Article" component={Article} />
       </Stack.Group>
+    </Stack.Navigator>
+  ) : (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Root"
+        component={Login}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -117,6 +143,22 @@ function BottomTabNavigator() {
         options={{
           title: "Journal",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Posts"
+        component={Posts}
+        options={{
+          title: "Posts",
+          tabBarIcon: ({ color }) => <TabBarIcon name="folder" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Workout"
+        component={Workout}
+        options={{
+          title: "Workout",
+          tabBarIcon: ({ color }) => <TabBarIcon name="folder" color={color} />,
         }}
       />
     </BottomTab.Navigator>

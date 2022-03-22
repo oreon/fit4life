@@ -9,23 +9,28 @@ import {
 import PropTypes from "prop-types";
 
 import { fetchApiData } from "../api";
+import RenderHTML from "react-native-render-html";
+import { Headline, List } from "react-native-paper";
 
-const Posts = ({ navigation }) => {
+export const Posts = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [lastPage, setLastPage] = useState(false);
 
   useEffect(() => {
-    const route = `posts?per_page=10&page=${page}`;
+    const route = `articles?per_page=10&page=${page}`;
     fetchApiData(route).then((res) => {
-      if (res.code !== "rest_post_invalid_page_number") {
-        setPosts((prevPosts) => [...prevPosts, ...res]);
-      } else {
-        setLastPage(true);
-      }
-      setLoading(false);
+      setPosts(res);
     });
+    // fetchApiData(route).then((res) => {
+    //   if (res.code !== "rest_post_invalid_page_number") {
+    //     setPosts((prevPosts) => [...prevPosts, ...res]);
+    //   } else {
+    //     setLastPage(true);
+    //   }
+    //   setLoading(false);
+    // });
   }, [page]);
 
   return (
@@ -37,16 +42,16 @@ const Posts = ({ navigation }) => {
               setPage((prevPage) => prevPage + 1);
             }
           }}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id + "xxx"}
           data={posts}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Post", { id: item.id })}
+              onPress={() => navigation.navigate("Article", { article: item })}
             >
-              <View>
-                <Text>{item.title.rendered}</Text>
-                <Text>{item.excerpt.rendered}</Text>
-              </View>
+              <List.Item
+                title={item.title}
+                description={item.title}
+              ></List.Item>
             </TouchableOpacity>
           )}
         />
