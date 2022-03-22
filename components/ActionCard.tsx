@@ -3,7 +3,10 @@ import { View, Text, Pressable } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { GlobalContext } from "../App";
+import { useState as huseState } from "@hookstate/core";
+
+import store from "../lib/Store";
+import { writeTodays } from "../lib/AsyncStorageHelper";
 
 const HamIcon = (props: any) => <Avatar.Icon {...props} icon="hamburger" />;
 
@@ -13,19 +16,16 @@ export default function ActionCard({
   text,
   cardtype,
   mfile,
-  updateScore,
+  score = 10,
 }) {
   const [done, setDone] = useState(false);
-  //const { score, setScore } = useContext(GlobalContext);
+  const globalState = huseState(store);
 
   const LeftContent = (props: any) =>
     // <Avatar.Icon {...props} icon="fruit-pineapple" />
     done ? <Ionicons name="md-checkmark-circle" size={32} color="green" /> : "";
 
   const isav = cardtype === "audio" || cardtype === "video";
-
-  //   const screen = ""
-  //   if (cardtype === "audio") screen ="Audio"
 
   return (
     <Card>
@@ -54,9 +54,12 @@ export default function ActionCard({
       <Card.Actions>
         <Card.Actions>
           <Button
-            onPress={() => {
+            onPress={async () => {
               setDone(true);
-              updateScore();
+              globalState.merge({
+                score: globalState.get().score + score,
+              });
+              await writeTodays("score", globalState.get().score);
             }}
             disabled={done}
           >

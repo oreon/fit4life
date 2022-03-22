@@ -11,6 +11,8 @@ import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import * as _ from "lodash";
 
+import { useState as huseState } from "@hookstate/core";
+
 import { ScrollView } from "react-native";
 import {
   Avatar,
@@ -22,31 +24,14 @@ import {
 } from "react-native-paper";
 import ActionCard from "../components/ActionCard";
 import { CARDS } from "../constants/Data";
-import { GlobalContext } from "../App";
+//import { GlobalContext } from "../App";
 import { getData, readTodays, storeData } from "../lib/AsyncStorageHelper";
+import store from "../lib/Store";
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
-  //const score = useContext(GlobalContext);
-
-  // const score = ;
-  // setScore(score);
-
-  // useEffect(() => {
-  //   console.log("called");
-  //   return async () => {
-
-  //   };
-  // }, []);
-
-  //const curscore = await readTodays("score", 2);
-
-  const [score, setScore] = React.useState(0);
-
-  const updateScore = async () => {
-    setScore(score + 1);
-  };
+  const globalState = huseState(store);
 
   return (
     <ScrollView
@@ -56,7 +41,7 @@ export default function TabOneScreen({
       showsVerticalScrollIndicator={false}
     >
       <Headline>
-        Your score {score} / {_.keys(CARDS).length}
+        Your score {globalState.get().score} / {_.keys(CARDS).length}
       </Headline>
       <Button onPress={() => navigation.navigate("Modal")}>Go to modal</Button>
       {Object.keys(CARDS).map((k, i) => (
@@ -67,7 +52,7 @@ export default function TabOneScreen({
           text={CARDS[k].text}
           cardtype={CARDS[k].type}
           mfile={CARDS[k].media}
-          updateScore={updateScore}
+          score={CARDS[k].score}
         />
       ))}
       {/* <ActionCard

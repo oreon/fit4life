@@ -1,0 +1,2 @@
+video player not working
+Need to calculate total max score using lodash

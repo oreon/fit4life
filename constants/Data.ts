@@ -35,32 +35,37 @@ export const MEAL_PLAN = {
 
   export const CARDS = {
     'meditate' :{
-        
         text:['Meditate first thing upon getting up in the morning.', 'This is great for brain health and overall calm'],
         media: 'breath',
-        type:'audio'
+        type:'audio',
+        score:40
     },
     'Salt water flush' :{
-        text:['Drink 5-6 glasses of warm water with salt']
+        text:['Drink 5-6 glasses of warm water with salt'],
+        score:20
     }, 
     'workout' :{
-        text:['Lets do a workout that will keep us energized during the whole day'],
+        text:['Lets do a workout that will keep us energized for the whole day'],
         media: 'wo-yoga',
-        type:'video'
+        type:'video',
+        score:30
     },
    
     'breakfast' :{
-        text:['salad', 'chick pea soup']
+        text:['1 Kg of your favourite fruits', ' 5-10 Soaked nuts']
     },
     'lunch' :{
-        title:'Lunch',
         text: ['salad 700gm or more', 'A bowl of legumes/beans or daal - with onion , corriander and lemon']
     },
+    
+    'dinner' :{
+        text: ['Green tea', 'Bowl of oatmeals' ,'fruit Icecream']
+    },
     'relax before sleep'  :{
-        title: ['salad 700gm or more', 'oatmeal with dates'],
         text:['salad', 'chick pea soup'],
         media: 'relax',
-        type:'audio'
+        type:'audio',
+        score:30
     },
 }
 

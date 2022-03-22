@@ -1,49 +1,65 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 
-export const GlobalContext = React.createContext({
-  score: 30,
-  setScore: () => {},
-});
+import { useState } from "@hookstate/core";
+import store from "./lib/Store";
+import { readTodays } from "./lib/AsyncStorageHelper";
 
-const GlobalProvider = (props) => {
-  const [score, setScore] = React.useState(40);
-  const [user, setUser] = React.useState("Jonny");
+// export const GlobalContext = React.createContext({
+//   score: 30,
+//   setScore: () => {},
+// });
 
-  const increment = () => {
-    setScore(score + 1);
-  };
+// const GlobalProvider = (props) => {
+//   const [score, setScore] = React.useState(40);
+//   const [user, setUser] = React.useState("Jonny");
 
-  return (
-    <GlobalContext.Provider value={score}>
-      {props.children}
-    </GlobalContext.Provider>
-  );
-};
+//   const increment = () => {
+//     setScore(score + 1);
+//   };
+
+//   return (
+//     <GlobalContext.Provider value={score}>
+//       {props.children}
+//     </GlobalContext.Provider>
+//   );
+// };
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
-  // const [score, setScore] = useState(0);
+  const globalState = useState(store);
 
-  // const user = null;
+  useEffect(() => {
+    readData();
+  }, []);
+
+  const readData = async () => {
+    try {
+      const currscore = await readTodays("score", 0);
+      globalState.merge({
+        score: currscore,
+      });
+      console.log("read score ", currscore);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
-      <GlobalProvider>
-        <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </SafeAreaProvider>
-      </GlobalProvider>
+      <SafeAreaProvider>
+        <Navigation colorScheme={colorScheme} />
+        <StatusBar />
+      </SafeAreaProvider>
     );
   }
 }
