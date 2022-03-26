@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { ColorSchemeName, Pressable } from "react-native";
 
@@ -11,7 +11,7 @@ import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import * as _ from "lodash";
 
-import { useState as huseState } from "@hookstate/core";
+import { useState } from "@hookstate/core";
 
 import { ScrollView } from "react-native";
 import {
@@ -26,12 +26,21 @@ import ActionCard from "../components/ActionCard";
 import { CARDS } from "../constants/Data";
 //import { GlobalContext } from "../App";
 import { getData, readTodays, storeData } from "../lib/AsyncStorageHelper";
-import store from "../lib/Store";
+import store, { useStoreActions, useStoreState } from "../lib/Store";
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
-  const globalState = huseState(store);
+  const todos = useStoreState((state) => state.todos);
+  const score = useStoreState((state) => state.score);
+  const user = useStoreState((state) => state.user);
+
+  const logoutAction = useStoreActions((actions) => actions.logout);
+
+  const logout = () => {
+    logoutAction();
+    // globalState.merge({ userid: null });
+  };
 
   return (
     <ScrollView
@@ -41,32 +50,25 @@ export default function TabOneScreen({
       showsVerticalScrollIndicator={false}
     >
       <Headline>
-        Your score {globalState.get().score} / {_.keys(CARDS).length}
+        Your score {score}/ {_.keys(CARDS).length}
       </Headline>
-      <Button onPress={() => navigation.navigate("Modal")}>Go to modal</Button>
-      {Object.keys(CARDS).map((k, i) => (
-        <ActionCard
-          navigation={navigation}
-          key={k}
-          title={k}
-          text={CARDS[k].text}
-          cardtype={CARDS[k].type}
-          mfile={CARDS[k].media}
-          score={CARDS[k].score}
-        />
+      <Button onPress={() => logout()}>Log out</Button>
+
+      {todos.map((k) => (
+        <ActionCard navigation={navigation} key={k.id} data={k} />
       ))}
-      {/* <ActionCard
-        navigation={navigation}
-        title="Meditation upon waking up"
-        text={"Mind is primed for meditation at this time"}
-        cardtype="audio"
-      /> */}
       <Button onPress={() => navigation.navigate("Modal")}>
         Update my score !
       </Button>
     </ScrollView>
   );
 }
+
+// title={k.title}
+// text={k.text}
+// cardtype={k.cardtype}
+// mfile={k.media}
+// score={k.score}
 
 const styles = StyleSheet.create({
   container: {

@@ -14,7 +14,7 @@ export const readTodays =  async (key, defval?) => {
     const sval = val.split("_")[1];
     if (isNumeric(val) )
       return parseInt(val);
-    return val
+    return JSON.parse(val)
   }
   return defval;
 }
@@ -35,7 +35,24 @@ export const storeData = async (key:string, val:string) => {
     //   duration: Toast.durations.SHORT,
     // });
   } catch (e) {
-    console.error("couldnt save for ", key, val);
+    console.error("couldnt save for ", key, val, e);
+    // let toast = Toast.show("Error saving  " + key  + " -> " + e, {
+    //   duration: Toast.durations.SHORT,
+    // });
+  }
+}
+
+export const remove = async (key:string) => {
+  
+  try {
+   
+    await AsyncStorage.removeItem(key)
+   
+    // let toast = Toast.show("Saved !", {
+    //   duration: Toast.durations.SHORT,
+    // });
+  } catch (e) {
+    console.error("couldnt remove  ", key);
     // let toast = Toast.show("Error saving  " + key  + " -> " + e, {
     //   duration: Toast.durations.SHORT,
     // });
@@ -45,10 +62,11 @@ export const storeData = async (key:string, val:string) => {
 export const getData = async (key:string) => {
   try {
     const value = await AsyncStorage.getItem(key)
+    console.log("read val ", value)
     if(value !== null) {
       // value previously stored
     }
-    return value
+    return JSON.parse(value)
   } catch(e) {
     // error reading value
     return null

@@ -3,54 +3,52 @@ import { View, Text, Pressable } from "react-native";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { useState as huseState } from "@hookstate/core";
 
-import store from "../lib/Store";
+import store, { useStoreActions, useStoreState, Todo } from "../lib/Store";
 import { writeTodays } from "../lib/AsyncStorageHelper";
 
 const HamIcon = (props: any) => <Avatar.Icon {...props} icon="hamburger" />;
 
-export default function ActionCard({
-  navigation,
-  title,
-  text,
-  cardtype,
-  mfile,
-  score = 10,
-}) {
-  const [done, setDone] = useState(false);
-  const globalState = huseState(store);
+export default function ActionCard({ navigation, data, score = 10 }) {
+  const todos = useStoreState((state) => state.todos);
+  //const actions = useStoreActions((state) => state.actions);
+
+  const markdone = useStoreActions((actions) => actions.markdone);
 
   const LeftContent = (props: any) =>
     // <Avatar.Icon {...props} icon="fruit-pineapple" />
-    done ? (
+    data.done ? (
       <Ionicons name="md-checkmark-circle" size={32} color="green" />
     ) : (
       <Ionicons name="attach" size={32} color="gray" />
     );
 
-  const isav = cardtype === "audio" || cardtype === "video";
+  const isav = data.cardtype === "audio" || data.cardtype === "video";
 
   return (
     <Card>
       <Card.Title
-        title={title}
+        title={data.title + " " + data.id}
         left={LeftContent}
-        style={{ backgroundColor: done ? "lightGray" : "#dedede" }}
+        style={{ backgroundColor: data.done ? "lightGray" : "#dedede" }}
       />
-      <Card.Content style={{ backgroundColor: done ? "lightGray" : "#dedede" }}>
-        <Title style={{ color: !done ? "green" : "gray" }}></Title>
-        <Paragraph style={{ color: !done ? "" : "gray" }}>{text}</Paragraph>
+      <Card.Content
+        style={{ backgroundColor: data.done ? "lightGray" : "#dedede" }}
+      >
+        <Title style={{ color: !data.done ? "green" : "gray" }}></Title>
+        <Paragraph style={{ color: !data.done ? "" : "gray" }}>
+          {data.text}
+        </Paragraph>
 
         {isav && (
           <Button
             onPress={() =>
-              navigation.navigate(cardtype, {
-                mfile: mfile,
+              navigation.navigate(data.cardtype, {
+                mfile: data.mfile,
               })
             }
           >
-            Play {cardtype}
+            Play {data.cardtype}
           </Button>
         )}
       </Card.Content>
@@ -59,13 +57,13 @@ export default function ActionCard({
         <Card.Actions>
           <Button
             onPress={async () => {
-              setDone(true);
-              globalState.merge({
-                score: globalState.get().score + score,
-              });
-              await writeTodays("score", globalState.get().score);
+              markdone(data.id);
+              // globalState.merge({
+              //   score: globalState.get().score + score,
+              // });
+              // await writeTodays("score", globalState.get().score);
             }}
-            disabled={done}
+            disabled={data.done}
           >
             Done
           </Button>

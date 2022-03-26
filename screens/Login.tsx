@@ -3,23 +3,21 @@ import React from "react";
 
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-import store from "../lib/Store";
+import store, { useStoreActions, useStoreState } from "../lib/Store";
 
 export default function Login() {
-  const globalState = useState(store);
+  const user = useStoreState((state) => state.user);
+  const login = useStoreActions((actions) => actions.login);
   return (
     <View style={styles.container}>
       <Button
         onPress={() => {
-          globalState.merge({
-            user: "jay smith",
-          }),
-            alert("logged in " + globalState.get().user);
+          login("jay_smith");
         }}
       >
         Log me in
       </Button>
-      <Text> USER {store.get().user}</Text>
+      <Text> USER {user}</Text>
     </View>
   );
 }
