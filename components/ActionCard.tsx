@@ -13,6 +13,8 @@ export default function ActionCard({ navigation, data, score = 10 }) {
   const todos = useStoreState((state) => state.todos);
   //const actions = useStoreActions((state) => state.actions);
 
+  if (!data.score) data.score = score;
+
   const markdone = useStoreActions((actions) => actions.markdone);
 
   const LeftContent = (props: any) =>
@@ -28,7 +30,7 @@ export default function ActionCard({ navigation, data, score = 10 }) {
   return (
     <Card>
       <Card.Title
-        title={data.title + " " + data.id}
+        title={data.id + ". " + data.title}
         left={LeftContent}
         style={{ backgroundColor: data.done ? "lightGray" : "#dedede" }}
       />

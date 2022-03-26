@@ -103,7 +103,7 @@ function RootNavigator() {
       todo.id = CARDS[k].id;
       todo.score = CARDS[k].score;
       todo.text = CARDS[k].text;
-      todo.title = CARDS[k].title;
+      todo.title = k;
       todo.done = false;
       todo.mfile = CARDS[k].media;
       todo.cardtype = CARDS[k].type;
