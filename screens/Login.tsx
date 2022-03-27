@@ -7,7 +7,7 @@ import store, { useStoreActions, useStoreState } from "../lib/Store";
 
 export default function Login() {
   const user = useStoreState((state) => state.user);
-  const login = useStoreActions((actions) => actions.login);
+  const login = useStoreActions((actions) => actions.apilogin);
   return (
     <View style={styles.container}>
       <Button

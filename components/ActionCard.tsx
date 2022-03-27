@@ -28,17 +28,15 @@ export default function ActionCard({ navigation, data, score = 10 }) {
   const isav = data.cardtype === "audio" || data.cardtype === "video";
 
   return (
-    <Card>
+    <Card style={{ margin: 5 }}>
       <Card.Title
         title={data.id + ". " + data.title}
         left={LeftContent}
         style={{ backgroundColor: data.done ? "lightGray" : "#dedede" }}
       />
-      <Card.Content
-        style={{ backgroundColor: data.done ? "lightGray" : "#dedede" }}
-      >
+      <Card.Content>
         <Title style={{ color: !data.done ? "green" : "gray" }}></Title>
-        <Paragraph style={{ color: !data.done ? "" : "gray" }}>
+        <Paragraph style={{ color: !data.done ? "#1a2a2a" : "gray" }}>
           {data.text}
         </Paragraph>
 
@@ -57,18 +55,16 @@ export default function ActionCard({ navigation, data, score = 10 }) {
       {/* <Card.Cover source={{ uri: "https://picsum.photos/700" }} /> */}
       <Card.Actions>
         <Card.Actions>
-          <Button
-            onPress={async () => {
-              markdone(data.id);
-              // globalState.merge({
-              //   score: globalState.get().score + score,
-              // });
-              // await writeTodays("score", globalState.get().score);
-            }}
-            disabled={data.done}
-          >
-            Done
-          </Button>
+          {!data.done && (
+            <Button
+              onPress={async () => {
+                markdone(data.id);
+              }}
+              disabled={data.done}
+            >
+              Done
+            </Button>
+          )}
         </Card.Actions>
       </Card.Actions>
     </Card>
