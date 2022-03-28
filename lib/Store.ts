@@ -91,16 +91,23 @@ const mystate = {
       // console.log("bef", state.todos)
       // //state.todos = {...state.todos,...todo}
       // console.log("after",state.todos)
+
+      //TODO : this code is buggy and only saving the previous state without the latest todo
       const comps = state.completedTodos
      
+    }),
+
+    saveTodo: thunk(async (actions, payload, {getState, getStoreState}) => {
+      actions.markdone(payload)
+      const state = getStoreState()
+      console.log("state ", state)
       const storedstate = {
         dones: state.completedTodos.map( x => x.id),
         score:state.score
       }
-      storeData(today(), storedstate)
-      // Toast.show('Excellent job !', {
-      //   duration: Toast.durations.SHORT,
-      // });
+      await storeData(today(), storedstate)
+      //const result = await axios.post('/todos', payload);
+     // actions.addTodo(result.data);
     }),
   
     logout: action((state:StoreModel) => {
@@ -123,10 +130,7 @@ const mystate = {
       state.records = payload;
     }),
 
-    saveTodo: thunk(async (actions, payload) => {
-      const result = await axios.post('/todos', payload);
-      actions.addTodo(result.data);
-    }),
+  
 
     apilogin: thunk( async (actions, data ) =>{
       try {

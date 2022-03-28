@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import store, { useStoreActions, useStoreState, Todo } from "../lib/Store";
 import { writeTodays } from "../lib/AsyncStorageHelper";
+import Toast from "react-native-root-toast";
 
 const HamIcon = (props: any) => <Avatar.Icon {...props} icon="hamburger" />;
 
@@ -15,7 +16,7 @@ export default function ActionCard({ navigation, data, score = 10 }) {
 
   if (!data.score) data.score = score;
 
-  const markdone = useStoreActions((actions) => actions.markdone);
+  const saveTodo = useStoreActions((actions) => actions.saveTodo);
 
   const LeftContent = (props: any) =>
     // <Avatar.Icon {...props} icon="fruit-pineapple" />
@@ -58,7 +59,10 @@ export default function ActionCard({ navigation, data, score = 10 }) {
           {!data.done && (
             <Button
               onPress={async () => {
-                markdone(data.id);
+                saveTodo(data.id);
+                // Toast.show("Excellent job !", {
+                //   duration: Toast.durations.SHORT,
+                // });
               }}
               disabled={data.done}
             >
