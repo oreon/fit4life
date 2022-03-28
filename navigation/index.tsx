@@ -36,9 +36,10 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { readTodays, storeData } from "../lib/AsyncStorageHelper";
+import { getData, readTodays, storeData } from "../lib/AsyncStorageHelper";
 import { CARDS } from "../constants/Data";
 import TodoRepo from "../model/TodoModel";
+import { today } from "../lib/helpers";
 
 export default function Navigation({
   colorScheme,
@@ -65,6 +66,7 @@ function RootNavigator() {
   const user = useStoreState((state) => state.user);
 
   const todos = useStoreState((state) => state.todos);
+  const setrecords = useStoreActions((actions) => actions.setrecords);
   //const actions = useStoreActions((state) => state.actions);
 
   const addTodo = useStoreActions((actions) => actions.addTodo);
@@ -74,47 +76,49 @@ function RootNavigator() {
 
   const readData = async () => {
     try {
-      TodoRepo.create();
-      TodoRepo.dummyrecords();
+      // TodoRepo.create();
+      // TodoRepo.dummyrecords();
 
-      let currscore = await readTodays("score", 0);
-      if (isNaN(currscore)) currscore = 0;
-      // globalState.merge({
-      //   score: currscore,
-      // });
+      // let currscore = await readTodays("score", 0);
+      // if (isNaN(currscore)) currscore = 0;
+
+      const td = await getData(today());
+      console.log("read todays", td);
+
+      if (!todos.length)
+        Object.keys(CARDS).map((k, i) => {
+          let todo = {} as Todo;
+          todo.id = CARDS[k].id;
+          todo.score = CARDS[k].score;
+          todo.text = CARDS[k].text;
+          todo.title = k;
+          todo.done = td && td.includes(CARDS[k].id);
+          todo.mfile = CARDS[k].media;
+          todo.cardtype = CARDS[k].type;
+          addTodo(todo);
+        });
+
       console.log("read score ", currscore);
+
+      const user = await getData("user");
+
+      if (user) {
+        setuser(user);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    readData();
-
     //just for testing
-    storeData("2022-03-21_score", "200");
-    storeData("2022-03-20_score", "100");
-    storeData("2022-03-19_score", "90");
-    storeData("2022-03-18_score", "0");
-    storeData("2022-03-16_score", "40");
+    // storeData("2022-03-21_score", "200");
+    // storeData("2022-03-20_score", "100");
+    // storeData("2022-03-19_score", "90");
+    // storeData("2022-03-18_score", "0");
+    // storeData("2022-03-16_score", "40");
 
-    const user = readData("user");
-
-    if (user) {
-      setuser(user);
-    }
-
-    Object.keys(CARDS).map((k, i) => {
-      let todo = {} as Todo;
-      todo.id = CARDS[k].id;
-      todo.score = CARDS[k].score;
-      todo.text = CARDS[k].text;
-      todo.title = k;
-      todo.done = false;
-      todo.mfile = CARDS[k].media;
-      todo.cardtype = CARDS[k].type;
-      addTodo(todo);
-    });
+    readData();
   }, []);
 
   //const [isLoading, setIsLoading] = useState(true);
