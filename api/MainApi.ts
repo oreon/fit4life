@@ -4,7 +4,7 @@ import { Article } from '../models/types';
 import {HttpClient} from './http-client-interceptor'
 //import { User } from './types';
 
-const ROOT_URL = 'http://localhost:8000/api'   //'http://10.0.2.2:8000/api'
+const ROOT_URL = 'https://easyslimandfit.com/api'   //'http://10.0.2.2:8000/api'
 
 
 export default class MainApi extends HttpClient {

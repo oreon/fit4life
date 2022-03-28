@@ -38,6 +38,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import { readTodays, storeData } from "../lib/AsyncStorageHelper";
 import { CARDS } from "../constants/Data";
+import TodoRepo from "../model/TodoModel";
 
 export default function Navigation({
   colorScheme,
@@ -69,8 +70,13 @@ function RootNavigator() {
   const addTodo = useStoreActions((actions) => actions.addTodo);
   const setuser = useStoreActions((actions) => actions.setuser);
 
+  let todoModel = null;
+
   const readData = async () => {
     try {
+      TodoRepo.create();
+      TodoRepo.dummyrecords();
+
       let currscore = await readTodays("score", 0);
       if (isNaN(currscore)) currscore = 0;
       // globalState.merge({
@@ -78,7 +84,7 @@ function RootNavigator() {
       // });
       console.log("read score ", currscore);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

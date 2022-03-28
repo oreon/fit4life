@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import _ from "lodash";
 //import Toast from "react-native-root-toast";
 
 const cur_date =  () => new Date().toISOString().split("T")[0];
@@ -25,11 +26,11 @@ export const writeTodays = async (key, value) =>{
 }
 
 
-export const storeData = async (key:string, val:string) => {
+export const storeData = async (key:string, val) => {
   
   try {
-    console.log("sving ", key, val);
-    await AsyncStorage.setItem(key, val)
+    console.log("saving ", key, JSON.stringify(val));
+    await AsyncStorage.setItem(key, JSON.stringify(val))
    
     // let toast = Toast.show("Saved !", {
     //   duration: Toast.durations.SHORT,
@@ -68,6 +69,35 @@ export const getData = async (key:string) => {
     }
     return JSON.parse(value)
   } catch(e) {
+    // error reading value
+    return null
+  }
+}
+
+
+export const allData = async () => {
+  
+  
+  try {
+    const keys = await AsyncStorage.getAllKeys()
+    const result = await AsyncStorage.multiGet(keys)
+    let i = -1;
+    const vals = result.map(x => {
+      i++
+      try{
+        return JSON.parse(x)
+      }catch(e){
+        console.log("error parsing json", x, e)
+         AsyncStorage.removeItem(keys[i])
+        return x
+      }
+    })
+    console.log("found records ->" ,  vals)
+
+    return  vals
+     
+  } catch(e) {
+    console.log("error happened reading all keys", e)
     // error reading value
     return null
   }

@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { createStore, computed, action, thunk, Computed, Action, Thunk, createTypedHooks, persist } from 'easy-peasy';
 //import { StoreModel } from './model';
@@ -9,6 +10,8 @@ import { remove, storeData, writeTodays } from './AsyncStorageHelper';
 
 import MainApi from "../api/MainApi";
 import { ActionSheetIOS } from 'react-native';
+import { today } from './helpers';
+import Toast from 'react-native-root-toast';
 
 type User = null | { username: string 
   token:string};
@@ -30,9 +33,23 @@ export interface Todo {
   score:number
 }
 
+//Measurement
+export interface Msmt{
+  name:string
+  val:number
+}
+
+export interface Record {
+  date:string
+  dones:number[]
+  msmts: Msmt[];
+  score:number
+}
+
 export interface StoreModel {
   todos: Todo[];
   user:string | null
+  records: Record[]
 }
 
 const typedHooks = createTypedHooks<StoreModel>();
@@ -46,7 +63,8 @@ const api = new MainApi(null);
 const mystate = {
   
     todos: [],
-    user: null,
+    records: [],
+    user: 'ay',
     //myscore: (state) =>_.sum(_.pick(state.completedTodos, score)),
     completedTodos: computed((state) => state.todos.filter((todo) => todo.done)),
     // score: computed((state) => {
@@ -68,8 +86,21 @@ const mystate = {
   
     markdone: action((state:StoreModel, payload) => {
       let todo : Todo= _.find(state.todos, {id:payload});
-     // console.log("foound todo with id ", payload, todo)
+      
       todo.done = true
+      // console.log("bef", state.todos)
+      // //state.todos = {...state.todos,...todo}
+      // console.log("after",state.todos)
+      const comps = state.completedTodos
+     
+      const storedstate = {
+        dones: state.completedTodos.map( x => x.id),
+        score:state.score
+      }
+      storeData(today(), storedstate)
+      // Toast.show('Excellent job !', {
+      //   duration: Toast.durations.SHORT,
+      // });
     }),
   
     logout: action((state:StoreModel) => {
@@ -87,6 +118,11 @@ const mystate = {
     setuser: action((state:StoreModel, payload) => {
       state.user = payload;
     }),
+
+    setrecords: action((state:StoreModel, payload) => {
+      state.records = payload;
+    }),
+
     saveTodo: thunk(async (actions, payload) => {
       const result = await axios.post('/todos', payload);
       actions.addTodo(result.data);
