@@ -1,16 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import _ from "lodash";
+import { today } from "./helpers";
 //import Toast from "react-native-root-toast";
 
-const cur_date =  () => new Date().toISOString().split("T")[0];
+
 
 export const isNumeric = (value) =>  /^-?\d+$/.test(value)
   
 
 export const readTodays =  async (key, defval?) => {
-  const cd = cur_date()
+  const cd = today()
   
   const val = await getData(cd + "_" + key);
+  console.log("read for key", cd + "_" + key, val)
   if(val){
     const sval = val.split("_")[1];
     if (isNumeric(val) )
@@ -21,7 +23,7 @@ export const readTodays =  async (key, defval?) => {
 }
 
 export const writeTodays = async (key, value) =>{
-  await storeData(cur_date() + "_" + key, value + "");
+  await storeData(today() + "_" + key, value + "");
  // await storeData(cd , value);
 }
 
@@ -87,7 +89,7 @@ export const allData = async () => {
       try{
         return JSON.parse(x)
       }catch(e){
-        console.log("error parsing json", x, e)
+        //console.log("error parsing json", x, e)
          AsyncStorage.removeItem(keys[i])
         return x
       }

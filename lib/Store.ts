@@ -41,7 +41,7 @@ export interface Msmt{
 
 export interface Record {
   date:string
-  dones:number[]
+  tasks:number[]
   msmts: Msmt[];
   score:number
 }
@@ -50,6 +50,8 @@ export interface StoreModel {
   todos: Todo[];
   user:string | null
   records: Record[]
+  token:string | null
+  todays: Record
 }
 
 const typedHooks = createTypedHooks<StoreModel>();
@@ -64,7 +66,9 @@ const mystate = {
   
     todos: [],
     records: [],
-    user: 'ay',
+    user:  'jay',
+    token:null,
+    todays:null,
     //myscore: (state) =>_.sum(_.pick(state.completedTodos, score)),
     completedTodos: computed((state) => state.todos.filter((todo) => todo.done)),
     // score: computed((state) => {
@@ -105,20 +109,32 @@ const mystate = {
         dones: state.completedTodos.map( x => x.id),
         score:state.score
       }
-      await storeData(today(), storedstate)
-      //const result = await axios.post('/todos', payload);
+      //await storeData(today(), storedstate)
+      await writeTodays('DONES', state.completedTodos.map( x => x.id))
+      try{
+        const result = await api.put(`/mark_done/${payload}`, null );
+        console.log(result)
+      }catch(e){
+        console.log("error saving ", payload, e)
+      }
+      
      // actions.addTodo(result.data);
     }),
   
     logout: action((state:StoreModel) => {
       state.user = null;
       remove('user')
+      remove('token')
       //storeData('user', state.user)
     }),
   
     login: action((state:StoreModel, payload) => {
-      state.user = payload;
+      state.user = payload.username;
+      state.token = payload.token
+      state.todays = payload.trk
+      console.log("stored in state", state.todays)
       storeData('user', state.user)
+      storeData("token", payload.token);
      
     }),
     
@@ -134,16 +150,19 @@ const mystate = {
 
     apilogin: thunk( async (actions, data ) =>{
       try {
-         data = {username:'singhjess@gmail.com', passoword:'mohali76'}
+        
          let token = await api.login(data);
+
          if (token) {
            console.log("got token ->", token);
-           const user = { username: data.username , token:token.token};
+           
            //setUser(user);
-           actions.login(data.usernamej)
-           api.token = token.token
-           await AsyncStorage.setItem("token", token.token);
-   
+           
+           api.token = token  //TODO: this should be removed
+           const trk = await api.get('/trackings/my_today')
+           const user = { username: data.username , token:token, trk:trk};
+           console.log("got trks ", trk)
+           actions.login(user)
           //  try {
           //    let plan = await api.todays();
           //    setPlan(plan)

@@ -4,14 +4,18 @@ import { Article } from '../models/types';
 import {HttpClient} from './http-client-interceptor'
 //import { User } from './types';
 
-const ROOT_URL = 'https://easyslimandfit.com/api'   //'http://10.0.2.2:8000/api'
+//const ROOT_URL = 'https://easyslimandfit.com/api'   
+//const ROOT_URL =  'http://10.0.2.2:8000/api'
+const ROOT_URL =  'http://127.0.0.1:8000/api'
+
+
 
 
 export default class MainApi extends HttpClient {
 
   
   public constructor(token) {
-    super('ROOT_URL');  //TODO: put this in file
+    super(ROOT_URL);  //TODO: put this in file
     this.token = token
   }
 
@@ -38,6 +42,7 @@ export default class MainApi extends HttpClient {
         headers: {'Authorization': 'Token ' + this.token }
       }) 
       console.log(response);
+      return response
     } catch (error) {
       console.error(error);
     }
@@ -45,8 +50,10 @@ export default class MainApi extends HttpClient {
 
   async  put(url, body) {
     try {
-      const response = await this.instance.put(url, body) //('/user?ID=12345');
-      console.log(response);
+      return await this.instance.put(url, body,{
+        headers: {'Authorization': 'Token ' + this.token }
+      }) 
+      
     } catch (error) {
       console.error(error);
     }
@@ -61,22 +68,20 @@ export default class MainApi extends HttpClient {
     }
   }
 
-  login = async ( body) => axios.post( ROOT_URL +'/auth-token/', body)
-  //{
-  //   console.log("calling with ",body)  
-  //   try {
-  //     const response = await this.instance.post('/auth-token/', body) 
-  //     for(var propName in response) {
-  //       console.log(propName, response[propName]);
-  //     }
-  //     //console.log(response.status)
-  //     //console.log(response)
-  //     return response['token'];
-  //   } catch (error) {
-  //     console.log(" login failed ", error);
-  //     return null
-  //   }
-  // }
+   login = async ( body) =>  //await this.instance.post(ROOT_URL +'/auth-token/',body). ['token']
+   {
+    try {
+      console.log("calling with ", body)
+      const response = await this.instance.post(ROOT_URL +'/auth-token/',body)  //{'username':'xx', 'password':'yy'}
+      console.log(response);
+      return response['token'];
+      
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
+
 
   register = async( body) => this.instance.post('/register/', body)
 

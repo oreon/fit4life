@@ -52,7 +52,7 @@ export default function TabOneScreen({
       <Headline>
         Your score {score}/ {_.keys(CARDS).length}
       </Headline>
-      <Button onPress={() => logout()}>Log out</Button>
+      <Button onPress={() => logout()}>Log out {user}</Button>
 
       {todos.map((k) => (
         <ActionCard navigation={navigation} key={k.id} data={k} />

@@ -12,7 +12,11 @@ export default function Login() {
     <View style={styles.container}>
       <Button
         onPress={() => {
-          login("jay_smith");
+          const data = {
+            username: "singhjess@gmail.com",
+            password: "mohali76",
+          };
+          login(data);
         }}
       >
         Log me in

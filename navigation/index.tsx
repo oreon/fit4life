@@ -66,6 +66,7 @@ function RootNavigator() {
   const user = useStoreState((state) => state.user);
 
   const todos = useStoreState((state) => state.todos);
+  const todays = useStoreState((state) => state.todays);
   const setrecords = useStoreActions((actions) => actions.setrecords);
   //const actions = useStoreActions((state) => state.actions);
 
@@ -82,8 +83,14 @@ function RootNavigator() {
       // let currscore = await readTodays("score", 0);
       // if (isNaN(currscore)) currscore = 0;
 
-      const td = await getData(today());
-      console.log("read todays", td);
+      //const td = await getData(today());
+      let td = await readTodays("DONES");
+      console.log("read todays dones", td);
+
+      if (!td) {
+        td = JSON.parse(todays.tasks);
+        console.log("read todays from api", td);
+      }
 
       if (!todos.length)
         Object.keys(CARDS).map((k, i) => {
@@ -98,7 +105,7 @@ function RootNavigator() {
           addTodo(todo);
         });
 
-      console.log("read score ", currscore);
+      //console.log("read score ", currscore);
 
       const user = await getData("user");
 
@@ -119,7 +126,7 @@ function RootNavigator() {
     // storeData("2022-03-16_score", "40");
 
     readData();
-  }, []);
+  }, [user]);
 
   //const [isLoading, setIsLoading] = useState(true);
 
