@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import Slider from "@react-native-community/slider";
 import { getData, storeData } from "../lib/AsyncStorageHelper";
+import { today } from "../lib/helpers";
+import { useStoreActions, useStoreState } from "../lib/Store";
 
 export default function CustomSlider(props: any) {
   const [slp, setSlpstate] = useState(props.initValue);
-  const cur_date = () => new Date().toISOString().split("T")[0];
+  const update_trk = useStoreActions((actions) => actions.update_trk);
+  const todays = useStoreState((state) => state.todays);
 
   // const save = (value: number) => {
-  //   const cur_date = new Date();
+  //   const today = new Date();
   //   setSlpstate(value);
   //   if (props?.callback) {
   //     props.callback(props.name, value);
@@ -17,7 +20,7 @@ export default function CustomSlider(props: any) {
 
   useEffect(() => {
     async function fetchMyAPI() {
-      const data = await getData(cur_date() + "_" + props.name);
+      const data = await getData(today() + "_" + props.name);
       console.log("read slider val ", data);
       if (data != null) {
         const idata = parseInt(data);
@@ -30,9 +33,9 @@ export default function CustomSlider(props: any) {
 
   const save = async (value) => {
     setSlpstate(value);
-    //console.log(dayofweek);
-    //setdayofweek
-    await storeData(cur_date() + "_" + props.name, value + "");
+    await storeData(today() + "_" + props.name, value + "");
+    todays[props.name] = value;
+    await update_trk(todays);
   };
 
   //TODO: extract style to props

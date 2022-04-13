@@ -57,6 +57,7 @@ export default class MainApi extends HttpClient {
 
   async  put(url, body) {
     try {
+      console.log("calling put with ", body);
       return await this.instance.put(url, body,{
         headers: {'Authorization': 'Token ' + this.token }
       }) 

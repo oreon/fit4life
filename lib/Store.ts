@@ -190,6 +190,19 @@ const mystate = {
          console.log("trks are ", state.trks)
     }),
 
+    update_trk: thunk( async (actions, data ,{getState, getStoreState}) =>{
+      const state = getStoreState()
+      try {
+          
+          let trks = await api.put('/trackings/', data)
+          state.trks = trks
+         }catch(e){
+          console.error(e);
+         }
+
+         console.log("trks are ", state.trks)
+    }),
+
     register : thunk(async( actions, body) => {
       const res = await api.post('/register/', body) 
       if(res){

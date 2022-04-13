@@ -10,3 +10,6 @@ charts
 
 Must change localstorage to MMKV 
 Workout 
+expired users
+content for meditations
+try usb debugging 
