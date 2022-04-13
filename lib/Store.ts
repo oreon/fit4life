@@ -66,9 +66,10 @@ const mystate = {
   
     todos: [],
     records: [],
-    user:  'jay',
+    user:  null, // 'jay',
     token:null,
     todays:null,
+    trks:[],
     //myscore: (state) =>_.sum(_.pick(state.completedTodos, score)),
     completedTodos: computed((state) => state.todos.filter((todo) => todo.done)),
     // score: computed((state) => {
@@ -146,7 +147,16 @@ const mystate = {
       state.records = payload;
     }),
 
-  
+    read_trks: thunk( async (actions, data ,{getState, getStoreState}) =>{
+      try {
+          const state = getStoreState()
+          const trks = await api.get('/trackings')
+          state.trks = trks
+         }catch(e){
+          console.error(e);
+         }
+
+    }),
 
     apilogin: thunk( async (actions, data ) =>{
       try {
@@ -160,8 +170,13 @@ const mystate = {
            
            api.token = token  //TODO: this should be removed
            const trk = await api.get('/trackings/my_today')
-           const user = { username: data.username , token:token, trk:trk};
-           console.log("got trks ", trk)
+          
+
+           const myprofile = await api.get('/users/me')
+
+           const user = { username: data.username , token:token, trk:trk, profile:myprofile};
+           console.log("got trks ", myprofile)
+
            actions.login(user)
           //  try {
           //    let plan = await api.todays();
