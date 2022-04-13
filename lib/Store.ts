@@ -12,6 +12,7 @@ import MainApi from "../api/MainApi";
 import { ActionSheetIOS } from 'react-native';
 import { today } from './helpers';
 import Toast from 'react-native-root-toast';
+import { CARDS } from '../constants/Data';
 
 type User = null | { username: string 
   token:string};
@@ -62,6 +63,28 @@ export const useStoreState = typedHooks.useStoreState;
 
 const api = new MainApi(null);
 
+const calcscore = (tasks) =>{
+  return _.reduce(tasks, function(sum, n) {
+  //   if(n ==undefined) 
+  //     return sum
+  //   //return sum + n.score 
+  //  const sc = (n.score) ? n.score :CARDS[n].score
+   return sum + n.score
+     
+  }, 0);
+
+}
+
+const calcscoreids = (tasks) =>{
+ 
+  return _.reduce(tasks, function(sum, n) {
+   const score = (CARDS[n].score) ? (CARDS[n].score): 0
+   return sum + score
+     
+  }, 0);
+
+}
+
 const mystate = {
   
     todos: [],
@@ -79,12 +102,10 @@ const mystate = {
     // }
     //   ),
     score: computed((state) => { 
-      const scores = state.completedTodos
-      
-      return _.reduce(scores, function(sum, n) {
-        return sum + n.score;
-      }, 0);
+      return calcscore(state.completedTodos)
     }  ),
+
+
     addTodo: action((state:StoreModel, payload) => {
       state.todos.push(payload);
     }),
@@ -148,14 +169,34 @@ const mystate = {
     }),
 
     read_trks: thunk( async (actions, data ,{getState, getStoreState}) =>{
+      const state = getStoreState()
       try {
-          const state = getStoreState()
-          const trks = await api.get('/trackings')
+          
+          let trks = await api.get('/trackings')
+
+          trks = trks.map(x =>{
+            if(x.tasks)
+              x.tasks = JSON.parse(x.tasks);
+            else x.tasks = []
+            x.day = x.day.split("T")[0]
+            x.score = calcscoreids(x.tasks)
+            return x
+          } )
           state.trks = trks
          }catch(e){
           console.error(e);
          }
 
+         console.log("trks are ", state.trks)
+    }),
+
+    register : thunk(async( actions, body) => {
+      const res = await api.post('/register/', body) 
+      if(res){
+        return actions.apilogin(body)
+      }
+      return("A user probably already exists")  //TODO : standardize error messages on register e.g user already exists
+      
     }),
 
     apilogin: thunk( async (actions, data ) =>{

@@ -18,6 +18,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CustomSlider from "../components/CustomSlider";
 import Settings from "./Settings";
 import BezLineChart from "../components/BezLineChart";
+import { useStoreActions, useStoreState } from "../lib/Store";
+import _ from "lodash";
 
 const Tab = createMaterialTopTabNavigator();
 const cur_date_str = new Date().toISOString().split("T")[0];
@@ -51,6 +53,37 @@ export function TrackerScreen() {
 
 export function StatsScreen() {
   //TODO - thsese should come from server or local sql lite
+
+  const records = useStoreState((state) => state.trks);
+  const [state, setstate] = useState({});
+
+  const read_trks = useStoreActions((actions) => actions.read_trks);
+
+  const readData = async () => {
+    //TODO: avoid every time
+    //if (records.length == 0)
+    await read_trks();
+    console.log(records);
+
+    const scores = records.map((x) => {
+      return { key: x.day, val: x.score };
+    });
+    const sleep = records.map((x) => {
+      return { key: x.day, val: x.sleep };
+    });
+    const stress = records.map((x) => {
+      return { key: x.day, val: x.stress };
+    });
+
+    setstate({ score: scores, sleep: sleep, stress: stress });
+
+    console.log(_.pick(records, ["day", "sleep"]));
+  };
+
+  useEffect(() => {
+    readData();
+  }, []);
+
   const scores = [
     { key: "Jan 3 2022", val: 350 },
     { key: "Jan 4 2022", val: 250 },
@@ -79,9 +112,9 @@ export function StatsScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <BezLineChart title="Scores" data={scores} />
-      <BezLineChart title="Sleep" data={sleep} />
-      <BezLineChart title="Stress" data={stress} />
+      <BezLineChart title="Scores" data={state.score} />
+      <BezLineChart title="Sleep" data={state.sleep} />
+      <BezLineChart title="Stress" data={state.stress} />
     </ScrollView>
   );
 }

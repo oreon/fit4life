@@ -40,6 +40,7 @@ import { getData, readTodays, storeData } from "../lib/AsyncStorageHelper";
 import { CARDS } from "../constants/Data";
 import TodoRepo from "../model/TodoModel";
 import { today } from "../lib/helpers";
+import Signup from "../screens/Signup";
 
 export default function Navigation({
   colorScheme,
@@ -95,11 +96,11 @@ function RootNavigator() {
       if (!todos.length)
         Object.keys(CARDS).map((k, i) => {
           let todo = {} as Todo;
-          todo.id = CARDS[k].id;
+          todo.id = k;
           todo.score = CARDS[k].score;
           todo.text = CARDS[k].text;
-          todo.title = k;
-          todo.done = td && td.includes(CARDS[k].id);
+          todo.title = CARDS[k].title;
+          todo.done = td && td.includes(k);
           todo.mfile = CARDS[k].media;
           todo.cardtype = CARDS[k].type;
           addTodo(todo);
@@ -158,8 +159,13 @@ function RootNavigator() {
   ) : (
     <Stack.Navigator>
       <Stack.Screen
-        name="Root"
+        name="Login"
         component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Signup"
+        component={Signup}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

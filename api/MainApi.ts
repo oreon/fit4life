@@ -37,14 +37,21 @@ export default class MainApi extends HttpClient {
   }
 
   async  post(url, body) {
+    console.log("calling post with ", body);
+    const hdrs = undefined
+    if(this.token){
+      const hdrs = {'Authorization': 'Token ' + this.token }
+    }
     try {
       const response = await this.instance.post(url, body,{
-        headers: {'Authorization': 'Token ' + this.token }
+
+        headers: hdrs
       }) 
       console.log(response);
       return response
     } catch (error) {
       console.error(error);
+      throw error
     }
   }
 
