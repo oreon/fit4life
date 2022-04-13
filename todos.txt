@@ -1,8 +1,12 @@
 video player not working
 Need to calculate total max score using lodash
 Remove the invalid color error
-Done status of tasks  should be remembered
+Done status of tasks  should be remembered * done 
 update icons from ionicons for breakfast, lunch meditation etc 
 Feeding start and end timings are not being saved to local storage
 local notifications
 charts
+
+
+Must change localstorage to MMKV 
+Workout 
