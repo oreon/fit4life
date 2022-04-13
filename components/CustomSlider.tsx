@@ -35,7 +35,7 @@ export default function CustomSlider(props: any) {
     setSlpstate(value);
     await storeData(today() + "_" + props.name, value + "");
     todays[props.name] = value;
-    await update_trk(todays);
+    await update_trk(todays); //TODO : this is resulting in method denied error 405
   };
 
   //TODO: extract style to props

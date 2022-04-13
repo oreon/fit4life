@@ -194,8 +194,8 @@ const mystate = {
       const state = getStoreState()
       try {
           
-          let trks = await api.put('/trackings/', data)
-          state.trks = trks
+          let trk = await api.put('/trackings/' + state.todays.id +'/', data)
+          state.todays = trk
          }catch(e){
           console.error(e);
          }
