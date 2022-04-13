@@ -35,6 +35,9 @@ export default function ModalScreen() {
 }
 
 export function TrackerScreen() {
+  const save = () => {
+    console.log("CALL API ");
+  };
   return (
     <View style={styles.container}>
       <View
@@ -46,7 +49,7 @@ export function TrackerScreen() {
       <CustomSlider name="sleep" label="Sleep" />
       <CustomSlider name="stress" label="Stress" />
       <CustomSlider name="steps" label="Steps walked" />
-      <Button onPress={() => save()}>Save </Button>
+      {/* <Button onPress={() => save()}>Save </Button> */}
     </View>
   );
 }
