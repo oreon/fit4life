@@ -9,6 +9,7 @@ import { WORKOUT_URLS } from "../constants/Data";
 
 import { Video } from "expo-av";
 import VideoPlayer from "expo-video-player";
+import GifTrainer from "../components/GifTrainer";
 
 export default function VideoScreen({ route, navigation }) {
   //const { mfile } = route.params; //mfile is the media file
@@ -17,13 +18,19 @@ export default function VideoScreen({ route, navigation }) {
   let playback_id = time % 2 != 0 ? WORKOUT_URLS.odd : WORKOUT_URLS.even;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Playing {playback_id}</Text>
-      <WorkoutYoutube mfile={playback_id} />
-
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+    <View>
+      <GifTrainer />
     </View>
   );
+
+  // return (
+  //   <View style={styles.container}>
+  //     <Text style={styles.title}>Playing {playback_id}</Text>
+  //     <WorkoutYoutube mfile={playback_id} />
+
+  //     <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+  //   </View>
+  // );
 }
 
 export function WorkoutYoutube({ mfile }) {
