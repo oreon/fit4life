@@ -84,9 +84,14 @@ function RootNavigator() {
       // let currscore = await readTodays("score", 0);
       // if (isNaN(currscore)) currscore = 0;
 
+      //TODO: reading from async storate alwaywas errors out
       //const td = await getData(today());
-      let td = await readTodays("DONES");
-      console.log("read todays dones", td);
+      //let td = await readTodays("DONES");
+      //console.log("read todays dones", td);
+
+      let td = undefined;
+
+      if (!todays) return;
 
       if (!td) {
         td = JSON.parse(todays.tasks);
@@ -100,7 +105,7 @@ function RootNavigator() {
           todo.score = CARDS[k].score;
           todo.text = CARDS[k].text;
           todo.title = CARDS[k].title;
-          todo.done = td && td.includes(k);
+          todo.done = td && td.includes(parseInt(k));
           todo.mfile = CARDS[k].media;
           todo.cardtype = CARDS[k].type;
           addTodo(todo);

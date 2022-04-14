@@ -13,6 +13,7 @@ import { ActionSheetIOS } from 'react-native';
 import { today } from './helpers';
 import Toast from 'react-native-root-toast';
 import { CARDS } from '../constants/Data';
+import { TabRouter } from '@react-navigation/native';
 
 type User = null | { username: string 
   token:string};
@@ -52,7 +53,7 @@ export interface StoreModel {
   user:string | null
   records: Record[]
   token:string | null
-  todays: Record
+  todays: Record |null
 }
 
 const typedHooks = createTypedHooks<StoreModel>();
@@ -145,6 +146,10 @@ const mystate = {
   
     logout: action((state:StoreModel) => {
       state.user = null;
+      state.todays = null
+      state.todos = []
+      state.records = []
+      state.token = null
       remove('user')
       remove('token')
       //storeData('user', state.user)
@@ -225,11 +230,12 @@ const mystate = {
            api.token = token  //TODO: this should be removed
            const trk = await api.get('/trackings/my_today')
           
+          //TODO: this fails on calling login right after register 
+          //const myprofile = await api.get('/users/me')
+          //console.log("got profile ", myprofile)
 
-           const myprofile = await api.get('/users/me')
-
-           const user = { username: data.username , token:token, trk:trk, profile:myprofile};
-           console.log("got trks ", myprofile)
+           const user = { username: data.username , token:token, trk:trk, profile:null};
+           
 
            actions.login(user)
           //  try {
