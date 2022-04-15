@@ -33,6 +33,34 @@ export const MEAL_PLAN = {
     
   }
 
+
+  export const LB = {
+    1 :{
+        title:'Squats',
+        text:['Go as deep as you can, keeping your core engaged and keeping your knees behind your toes'],
+    },
+    2:{
+        title:'Right leg lunge',
+        text:['Bring your right leg to the front and bend down'],
+    },
+    3:{
+        title:'Left leg lunge',
+        text:['Bring your left leg to the front and bend down'],
+    },
+    4:{
+        title:'Right leg Side lunge',
+        text:['Go as deep as you can, keeping your core engaged and keeping your knees behind your toes'],
+    },
+    5:{
+        title:'Left leg side lunge',
+        text:['Go as deep as you can, keeping your core engaged and keeping your knees behind your toes'],
+    },
+    6:{
+        title:'Glute bridge',
+        text:['Lie on the floor and lift your glutes'],
+    },
+  }
+
   export const CARDS = {
     1 :{
         title:'meditate',

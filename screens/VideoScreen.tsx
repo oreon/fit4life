@@ -10,6 +10,7 @@ import { WORKOUT_URLS } from "../constants/Data";
 import { Video } from "expo-av";
 import VideoPlayer from "expo-video-player";
 import GifTrainer from "../components/GifTrainer";
+import { Headline } from "react-native-paper";
 
 export default function VideoScreen({ route, navigation }) {
   //const { mfile } = route.params; //mfile is the media file
@@ -17,9 +18,15 @@ export default function VideoScreen({ route, navigation }) {
   var time = new Date().getDate();
   let playback_id = time % 2 != 0 ? WORKOUT_URLS.odd : WORKOUT_URLS.even;
 
+  const isEven = time % 2 === 0; //? 'lower' :'upper';
+  //TODO: show lower or upper in header
   return (
-    <View>
-      <GifTrainer />
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
+      {/* <Headline>
+        {isEven ? "Upper body workout" : "Lower body workout"}
+      </Headline> */}
+      {isEven && <GifTrainer day="upper" exercises={3} sets={4} />}
+      {!isEven && <GifTrainer day="lower" exercises={6} sets={3} />}
     </View>
   );
 

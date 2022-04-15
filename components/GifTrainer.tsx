@@ -12,6 +12,7 @@ import { Button, View, Alert, Animated } from "react-native";
 //import { WORKOUT_URLS } from "./data";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { Audio } from "expo-av";
+import { LB } from "../constants/Data";
 //import { Text, View, StyleSheet,  } from "react-native";
 
 //icon - human
@@ -31,6 +32,7 @@ const legs = ["squat", "lunge", "side-lunge", "glute_bridge"];
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
+    justifyContent: "center",
     //alignItems: "center",
     //margin: 1,
   },
@@ -45,31 +47,55 @@ const styles = StyleSheet.create({
   },
 });
 
-const avatarImage = (current) => {
+const avatarImageLower = (current) => {
   switch (current) {
     case 1:
       return require("../assets/images/legs/squat.gif");
     case 2:
       return require("../assets/images/legs/lunge.gif");
     case 3:
-      return require("../assets/images/legs/side-lunge.gif");
+      return require("../assets/images/legs/lunge.gif");
     case 4:
+      return require("../assets/images/legs/side-lunge.gif");
+    case 5:
+      return require("../assets/images/legs/side-lunge.gif");
+    case 6:
       return require("../assets/images/legs/glute_bridge.gif");
   }
 };
 
-export default function GifTrainer() {
-  const sets = 3;
-  const exercises = 4;
-  const REST = 1;
-  const INTERVAL = 4;
+const avatarImageUpper = (current) => {
+  switch (current) {
+    case 1:
+      return require("../assets/images/legs/lunge.gif");
+    case 2:
+      return require("../assets/images/legs/glute_bridge.gif");
+    case 3:
+      return require("../assets/images/legs/lunge.gif");
+    // case 4:
+    //   return require("../assets/images/legs/side-lunge.gif");
+    // case 5:
+    //   return require("../assets/images/legs/side-lunge.gif");
+    // case 6:
+    //   return require("../assets/images/legs/glute_bridge.gif");
+  }
+};
+
+export default function GifTrainer({
+  day,
+  exercises = 6,
+  sets = 3,
+  rest = 2,
+  interval = 4,
+}) {
+  //const exercises = 6;
 
   const [isPlaying, setIsPlaying] = React.useState(false);
 
   const [current, setCurrent] = React.useState(1);
   const [setNumber, setSetNumber] = React.useState(1);
   const [resting, setResting] = useState(false);
-  const [duration, setDuration] = useState(INTERVAL);
+  const [duration, setDuration] = useState(interval);
   let prev_resting = resting;
   const [sound, setSound] = useState();
 
@@ -117,12 +143,12 @@ export default function GifTrainer() {
               setResting(!resting);
               // console.log("is resting ->", prev_resting);
               if (!prev_resting) {
-                setDuration(REST);
+                setDuration(rest);
 
                 setCurrent(exercises !== current ? current + 1 : 1);
                 if (current == exercises) setSetNumber(setNumber + 1);
               } else {
-                setDuration(INTERVAL);
+                setDuration(interval);
               }
 
               // console.log("set->", setNumber);
@@ -139,8 +165,22 @@ export default function GifTrainer() {
           </CountdownCircleTimer>
 
           {!resting && (
-            <Image source={avatarImage(current)} style={styles.stretch} />
+            <Image
+              source={
+                day === "upper"
+                  ? avatarImageUpper(current)
+                  : avatarImageLower(current)
+              }
+              style={styles.stretch}
+            />
           )}
+          {!resting && (
+            <View>
+              <Headline> {LB[current].title}</Headline>
+              <Text> {LB[current].text}</Text>
+            </View>
+          )}
+
           {resting && <Title> Rest !</Title>}
           <Button
             title={isPlaying ? "Pause" : "Play"}

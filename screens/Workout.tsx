@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import GifTrainer from "../components/GifTrainer";
 
 export default function Workout({ route, navigation }) {
   return (
-    <View>
-      <GifTrainer />
-    </View>
+    <ScrollView>
+      <GifTrainer day="upper" exercises={3} sets={4} />
+      <GifTrainer day="lower" exercises={6} sets={3} />
+    </ScrollView>
   );
 }
 
