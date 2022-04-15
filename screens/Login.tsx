@@ -73,10 +73,10 @@ export default function Login({ navigation }) {
             )}
             <Button onPress={handleSubmit} disabled={!isValid}>
               {" "}
-              Log In{" "}
+              Log me In{" "}
             </Button>
 
-            <Button onPress={() => navigation.push("Signup")}>Signup</Button>
+            <Button onPress={() => navigation.push("Signup")}>Sign up</Button>
           </>
         )}
       </Formik>

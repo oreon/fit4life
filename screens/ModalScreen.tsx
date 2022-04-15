@@ -68,17 +68,22 @@ export function StatsScreen() {
     await read_trks();
     console.log(records);
 
-    const scores = records.map((x) => {
-      return { key: x.day, val: x.score };
-    });
-    const sleep = records.map((x) => {
-      return { key: x.day, val: x.sleep };
-    });
-    const stress = records.map((x) => {
-      return { key: x.day, val: x.stress };
-    });
+    const scores = (scoretype) =>
+      records.map((x) => {
+        if (x.day && x[scoretype]) return { key: x.day, val: x[scoretype] };
+      });
+    // const sleep = records.map((x) => {
+    //   return { key: x.day, val: x.sleep };
+    // });
+    // const stress = records.map((x) => {
+    //   return { key: x.day, val: x.stress };
+    // });
 
-    setstate({ score: scores, sleep: sleep, stress: stress });
+    setstate({
+      score: scores("score"),
+      sleep: scores("sleep"),
+      stress: scores("stress"),
+    });
 
     console.log(_.pick(records, ["day", "sleep"]));
   };
