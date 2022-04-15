@@ -11,6 +11,7 @@ import { Button, View, Alert, Animated } from "react-native";
 //import { WebView } from "react-native-webview";
 //import { WORKOUT_URLS } from "./data";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import { Audio } from "expo-av";
 //import { Text, View, StyleSheet,  } from "react-native";
 
 //icon - human
@@ -30,6 +31,8 @@ const legs = ["squat", "lunge", "side-lunge", "glute_bridge"];
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
+    //alignItems: "center",
+    //margin: 1,
   },
   timer: {
     alignItems: "center",
@@ -58,8 +61,8 @@ const avatarImage = (current) => {
 export default function GifTrainer() {
   const sets = 3;
   const exercises = 4;
-  const REST = 15;
-  const INTERVAL = 45;
+  const REST = 1;
+  const INTERVAL = 4;
 
   const [isPlaying, setIsPlaying] = React.useState(false);
 
@@ -68,13 +71,27 @@ export default function GifTrainer() {
   const [resting, setResting] = useState(false);
   const [duration, setDuration] = useState(INTERVAL);
   let prev_resting = resting;
+  const [sound, setSound] = useState();
 
   const finished = () => setNumber > sets;
+
   const restart = () => {
     setCurrent(1);
     setSetNumber(1);
     setResting(false);
   };
+
+  async function playSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("../assets/audio/bell.mp3")
+    );
+    setSound(sound);
+
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
+
   return (
     <View style={styles.container}>
       {!finished() && (
@@ -95,6 +112,7 @@ export default function GifTrainer() {
             ]}
             onComplete={() => {
               // console.log(resting.current);
+              playSound();
               prev_resting = resting;
               setResting(!resting);
               // console.log("is resting ->", prev_resting);
